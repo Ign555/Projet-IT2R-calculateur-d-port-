@@ -1,0 +1,11 @@
+-c --cpu Cortex-M4.fp -D__RTX -D__EVAL -g -O0 --apcs=interwork --split_sections
+-I U:\S4_projet\2021_STM32F4_base_SPI\RTE
+-I U:\S4_projet\2021_STM32F4_base_SPI\RTE\Device\STM32F407VGTx
+-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.6.0\CMSIS\Core\Include
+-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.6.0\CMSIS\Driver\Include
+-I C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.6.0\CMSIS\RTOS\RTX\INC
+-I C:\Keil_v5\ARM\PACK\Keil\MDK-Middleware\7.0.0\Board
+-I C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include
+-I C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\STM32F4xx_HAL_Driver\Inc
+-D__UVISION_VERSION="517" -D_RTE_ -DSTM32F407xx
+-o .\objects\led.o --omf_browse .\objects\led.crf --depend .\objects\led.d "..\Base_SPI_LED\led.c"
