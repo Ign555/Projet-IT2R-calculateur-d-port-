@@ -115,8 +115,10 @@ uint8_t trame[300];
 LEDS_init(trame);
 while(1)
 {	
-	 chenillard (trame,8);
-		osDelay(100);
+		chenillard (trame,4);
+		
+		
+		
 }	
 }
 
@@ -125,7 +127,7 @@ void clignotant_g (void const *argument)
 		while (1)
 {
 	//clignotant_gauche(); 
-	osDelay(100); 
+	osDelay(osWaitForever);
 }
 }
 

@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\test1.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\test1.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Tue Mar 25 19:02:02 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060061: Last Updated: Tue Mar 25 19:23:53 2025
 <BR><P>
 <H3>Maximum Stack Usage =        368 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -824,7 +824,7 @@ Global Symbols
 
 <P><STRONG><a name="[80]"></a>_mutex_release</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, rtx_conf_cm.o(i._mutex_release), UNUSED, KEPT)
 
-<P><STRONG><a name="[bc]"></a>chenillard</STRONG> (Thumb, 60 bytes, Stack size 32 bytes, leds.o(i.chenillard))
+<P><STRONG><a name="[bc]"></a>chenillard</STRONG> (Thumb, 86 bytes, Stack size 32 bytes, leds.o(i.chenillard))
 <BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = chenillard &rArr; LEDS_set_single_led_color
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LEDS_set_single_led_color
@@ -833,7 +833,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[6e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mySPI_Thread
 </UL>
 
-<P><STRONG><a name="[6f]"></a>clignotant_g</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, led.o(i.clignotant_g))
+<P><STRONG><a name="[6f]"></a>clignotant_g</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, led.o(i.clignotant_g))
 <BR><BR>[Calls]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> led.o(.constdata)
@@ -900,18 +900,16 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> rtx_conf_cm.o(.constdata)
 </UL>
-<P><STRONG><a name="[6e]"></a>mySPI_Thread</STRONG> (Thumb, 26 bytes, Stack size 304 bytes, led.o(i.mySPI_Thread))
+<P><STRONG><a name="[6e]"></a>mySPI_Thread</STRONG> (Thumb, 20 bytes, Stack size 304 bytes, led.o(i.mySPI_Thread))
 <BR><BR>[Stack]<UL><LI>Max Depth = 368<LI>Call Chain = mySPI_Thread &rArr; chenillard &rArr; LEDS_set_single_led_color
 </UL>
-<BR>[Calls]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
-<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chenillard
+<BR>[Calls]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chenillard
 <LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LEDS_init
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> led.o(.constdata)
 </UL>
 <P><STRONG><a name="[bd]"></a>osDelay</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, rt_cmsis.o(i.osDelay))
 <BR><BR>[Called By]<UL><LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;chenillard
-<LI><a href="#[6e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mySPI_Thread
 <LI><a href="#[71]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 <LI><a href="#[6f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;clignotant_g
 </UL>

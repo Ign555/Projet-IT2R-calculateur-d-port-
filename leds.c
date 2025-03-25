@@ -50,15 +50,18 @@ void LEDS_set_single_led_color(uint8_t *trame, uint8_t led_number, uint8_t r, ui
 
 void chenillard (uint8_t *trame, int num_leds)
 {
+	
+	
 	int i,m;
 	for(i = 0; i < num_leds; i++){
 	LEDS_set_single_led_color(trame, i+1,255,0,0,255);
-	osDelay(100);
+	osDelay(10);
 	}
-	for (m= num_leds; m>0;i--){
-	void LEDS_clear(uint8_t *trame);
-	}
+	for (m = num_leds; m > 0 ; m--){
+	 LEDS_set_single_led_color(trame, m,0,0,0,255);
+		osDelay(10);
 	
+	}
 }
 
 
