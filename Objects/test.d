@@ -7,8 +7,8 @@
 .\objects\test.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\test.o: C:\Keil_v5\ARM\PACK\Keil\MDK-Middleware\7.0.0\Board\Board_GLCD.h
 .\objects\test.o: C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h
-.\objects\test.o: U:\S4_projet\2021_STM32F4_base_SPI\RTE\Device\STM32F407VGTx\stm32f4xx_hal_conf.h
-.\objects\test.o: U:\S4_projet\2021_STM32F4_base_SPI\RTE\RTE_Components.h
+.\objects\test.o: C:\Users\TEMP.GEII2.004\Documents\GitHub\Projet-IT2R-calculateur-d-port-\RTE\Device\STM32F407VGTx\stm32f4xx_hal_conf.h
+.\objects\test.o: C:\Users\TEMP.GEII2.004\Documents\GitHub\Projet-IT2R-calculateur-d-port-\RTE\RTE_Components.h
 .\objects\test.o: C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_rcc.h
 .\objects\test.o: C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_def.h
 .\objects\test.o: C:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.14.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h

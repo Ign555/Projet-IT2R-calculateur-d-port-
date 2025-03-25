@@ -5,5 +5,5 @@
 #include "cmsis_os.h"                   // CMSIS RTOS header file
 
 
-void Clignotant (void);
+void Clignotant_g (void);
 void phare (void);

@@ -6,26 +6,29 @@
 #include "stm32f4xx_hal.h" 
 #include "Board_LED.h"   
 #include "cmsis_os.h"                   // CMSIS RTOS header file
+#include "leds.h"
 
 
 
 
-#define NB_LEDS	4
-#define cli_g
-#define cli_d
+#define cli_g 2
+//#define cli_d 2
 extern ARM_DRIVER_SPI Driver_SPI1;
 
 void configure_GPIO(void);
 
 
 void mySPI_Thread (void const *argument);                             // thread tache principale
-
+void clignotant_g (void const *argument);
+//void clignotant_d (void const *argument);	
 
 osThreadId tid_mySPI_Thread;// thread ids
+osThreadId tid_clignotant_g;
+//sThreadId tid_clignotant_d;
 
 osThreadDef (mySPI_Thread, osPriorityNormal, 1, 0);                   // thread object
-
-
+osThreadDef (clignotant_g, osPriorityNormal, 1, 0);
+//osThreadDef (clignotant_d, osPriorityNormal, 1, 0);
 
 
 //fonction de CB lancee si Event T ou R
@@ -41,16 +44,6 @@ void mySPI_callback(uint32_t event)
 	}
 }
 
-void Init_SPI(void){
-	Driver_SPI1.Initialize(mySPI_callback);
-	Driver_SPI1.PowerControl(ARM_POWER_FULL);
-	Driver_SPI1.Control(ARM_SPI_MODE_MASTER | 
-											ARM_SPI_CPOL1_CPHA1 |   // Choisir en fonction datasheet
-//											ARM_SPI_MSB_LSB | 
-											ARM_SPI_SS_MASTER_UNUSED |
-											ARM_SPI_DATA_BITS(8), 1000000); // 1Mhz
-	Driver_SPI1.Control(ARM_SPI_CONTROL_SS, ARM_SPI_SS_INACTIVE);
-}
 /***************************Fonction bibliothèque ***********************/
 void phare (void)
 {
@@ -60,39 +53,35 @@ char start_frame[300];
 for( i = 0; i < 4; i++){ // 4 octects de start 
 	start_frame[i] = 0x00;
 }
-for( i = 1; i <NB_LEDS+1 ; i++){
-	start_frame[i*4] = 0xFF; // valeur globale
-	start_frame[1+i*4] = 0x00;// Bleu
-	start_frame[2+i*4] = 0x00;// Vert
-	start_frame[3+i*4] = 0xFF;// Rouge
-}
+
 for( i = ((NB_LEDS+1)*4); i < ((NB_LEDS*4)+4); i++)// portion du bandeau led (deplacement de 4 en 4)
 { 
-	start_frame[i] = 0xff;
+	start_frame[i] = 0x00;
 }
 Driver_SPI1.Send(start_frame,((NB_LEDS*4)+4));
 }
 
-void clignotant_g()
+void clignotant_gauche()
 {
 
 int 	i; 
 char start_frame[300];
-for( i = 0; i < 4; i++){ // 4 octects de start 
+for( i = 1; i < 5; i++){ // 4 octects de start 
 	start_frame[i] = 0x00;
 }
-for( i = 7; i <7+1 ; i++){
-	start_frame[i*4] = 0xFF; // valeur globale
-	start_frame[7+i*4] = 0x00;// Bleu
-	start_frame[8+i*4] = 0xFF;// Vert
-	start_frame[9+i*4] = 0x00;// Rouge
+for( i = 1; i <cli_g+1 ; i++){
+	start_frame[i*4] = 0xFF; // intensité globale
+	start_frame[1+i*4] = 0x00;// Bleu
+	start_frame[2+i*4] = 0xFF;// Vert
+	start_frame[3+i*4] = 0x00;// Rouge
 }
-for( i = ((7+1)*4); i < ((7*4)+4); i++)// portion du bandeau led (deplacement de 4 en 4)
+for( i = ((cli_g+1)*4); i < ((cli_g*4)+4); i++)// portion du bandeau led (deplacement de 4 en 4)
 { 
-	start_frame[i] = 0xff;
+	start_frame[i] = 0x00;
 }
-Driver_SPI1.Send(start_frame,((7*4)+4));
+Driver_SPI1.Send(start_frame,((cli_g*4)+4));
 }
+
 
 
 
@@ -104,11 +93,12 @@ int main (void){
 	
 	// initialize peripherals here 
 	
-	Init_SPI();
+	
 	NVIC_SetPriority(SPI1_IRQn,2);
 	LED_Initialize(); 
 	tid_mySPI_Thread = osThreadCreate (osThread(mySPI_Thread), NULL);           // crea tâche
-	
+	tid_clignotant_g= osThreadCreate  (osThread(clignotant_g),NULL); 
+	//tid_clignotant_d=osThreadCreate  (osThread(clignotant_d),NULL); 
 	osKernelStart ();                         // start thread execution 
 	
 	LED_On(1); 
@@ -121,14 +111,23 @@ int main (void){
 
 void mySPI_Thread (void const *argument)
 {
-
-
+uint8_t trame[300];
+LEDS_init(trame);
 while(1)
 {	
-	//clignotant_g();
-	 phare(); 
-	
-	osDelay(100);
+		LEDS_set_single_led_color(trame, 10, 255, 0, 0, 255);
+		osDelay(100);
 }	
 }
+
+void clignotant_g (void const *argument)
+{
+		while (1)
+{
+	//clignotant_gauche(); 
+	osDelay(100); 
+}
+}
+
+
 

@@ -1,6 +1,7 @@
 --cpu Cortex-M4.fp
-".\objects\led.o"
 ".\objects\test.o"
+".\objects\led.o"
+".\objects\leds.o"
 ".\objects\buttons_f4discovery.o"
 ".\objects\led_f4discovery.o"
 "C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.6.0\CMSIS\RTOS\RTX\LIB\ARM\RTX_CM4.lib"
