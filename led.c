@@ -115,7 +115,7 @@ uint8_t trame[300];
 LEDS_init(trame);
 while(1)
 {	
-		LEDS_set_single_led_color(trame, 10, 255, 0, 0, 255);
+	 chenillard (trame,8);
 		osDelay(100);
 }	
 }

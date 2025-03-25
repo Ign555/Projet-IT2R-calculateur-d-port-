@@ -46,6 +46,23 @@ void LEDS_set_single_led_color(uint8_t *trame, uint8_t led_number, uint8_t r, ui
 	
 	Driver_SPI1.Send(trame,((NB_LEDS*4)+8));
 }
+
+
+void chenillard (uint8_t *trame, int num_leds)
+{
+	int i,m;
+	for(i = 0; i < num_leds; i++){
+	LEDS_set_single_led_color(trame, i+1,255,0,0,255);
+	osDelay(100);
+	}
+	for (m= num_leds; m>0;i--){
+	void LEDS_clear(uint8_t *trame);
+	}
+	
+}
+
+
+
 void _LEDS_trame_start(uint8_t *trame){
 	int i;
 	for( i = 0; i < 4; i++){ // 4 octects de start 
