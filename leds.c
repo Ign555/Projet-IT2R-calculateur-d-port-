@@ -85,7 +85,7 @@ void phares(uint8_t * trame, int debut, int fin){
 int i ; 
 						for (i=debut;i<fin ;i++)
 						{
-							LEDS_set_single_led_color(trame,i,140,42,42,255);
+							LEDS_set_single_led_color(trame,i,140,255,0,240);
 						}
 
 }
@@ -95,11 +95,11 @@ void gauche (uint8_t * trame, int debut, int fin)
 	
 	int i,m;
 	for (i=debut;i>fin ;i--){
-	LEDS_set_single_led_color(trame, i-1,255,0,0,255);
+	LEDS_set_single_led_color(trame, i-1,255,0,0,240);
 	osDelay(10);
 	}
 	for (m = fin; m <= debut	; m++){
-	 LEDS_set_single_led_color(trame, m,0,0,0,255);
+	 LEDS_set_single_led_color(trame, m,0,0,0,240);
 		osDelay(10);
 	
 	}
