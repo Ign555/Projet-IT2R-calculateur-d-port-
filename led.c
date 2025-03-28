@@ -17,18 +17,20 @@ extern ARM_DRIVER_SPI Driver_SPI1;
 
 void configure_GPIO(void);
 
-
+/************partie RTOS***************************************/
 void mySPI_Thread (void const *argument);                             // thread tache principale
 void clignotant_g (void const *argument);
 //void clignotant_d (void const *argument);	
 
 osThreadId tid_mySPI_Thread;// thread ids
 osThreadId tid_clignotant_g;
-//sThreadId tid_clignotant_d;
+osThreadId tid_clignotant_d;
 
 osThreadDef (mySPI_Thread, osPriorityNormal, 1, 0);                   // thread object
 osThreadDef (clignotant_g, osPriorityNormal, 1, 0);
 //osThreadDef (clignotant_d, osPriorityNormal, 1, 0);
+osSemaphoreId Id_Sema; 
+osSemaphoreDef(MonSema);
 
 
 //fonction de CB lancee si Event T ou R
@@ -85,51 +87,63 @@ Driver_SPI1.Send(start_frame,((cli_g*4)+4));
 
 
 
-
 /***************************Programme ***********************/
 int main (void){
 	
+	uint8_t trame [300];
+
 	osKernelInitialize ();                    // initialize CMSIS-RTOS
 	
 	// initialize peripherals here 
 	
-	
+	Id_Sema = osSemaphoreCreate(osSemaphore(MonSema),2);
 	NVIC_SetPriority(SPI1_IRQn,2);
 	LED_Initialize(); 
 	tid_mySPI_Thread = osThreadCreate (osThread(mySPI_Thread), NULL);           // crea tâche
 	tid_clignotant_g= osThreadCreate  (osThread(clignotant_g),NULL); 
-	//tid_clignotant_d=osThreadCreate  (osThread(clignotant_d),NULL); 
+//	tid_clignotant_d=osThreadCreate  (osThread(clignotant_d),NULL); 
 	osKernelStart ();                         // start thread execution 
 	
 	LED_On(1); 
 	LED_On(2);
 	LED_On(3);
 	LED_On(4);
-	osDelay(osWaitForever);
-	
+	osDelay(osWaitForever);	
+
+
 }
 
 void mySPI_Thread (void const *argument)
 {
+
+	
 uint8_t trame[300];
 LEDS_init(trame);
-while(1)
-{	
-		chenillard (trame,4);
-		
-		
-		
-}	
+		while(1)
+					{	
+						//osSemaphoreRelease(Id_Sema);
+						chenillard (trame,5);	
+						phares(trame,6,15);
+						gauche(trame,20,15); 
+					
+						osDelay(100);
+					}	
 }
 
 void clignotant_g (void const *argument)
 {
-		while (1)
-{
-	//clignotant_gauche(); 
-	osDelay(osWaitForever);
+	uint8_t trame [300];
+	LEDS_init (trame); 
+	
+	while (1)
+		
+					{
+						
+						//gauche(trame,20); 
+						osDelay(100);
+						//osSemaphoreWait(Id_Sema,osWaitForever);
+					}
 }
-}
 
 
-
+ 

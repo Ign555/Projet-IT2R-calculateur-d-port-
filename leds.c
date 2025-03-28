@@ -1,4 +1,5 @@
 #include "leds.h"
+#include "stm32f4xx_hal.h"
 void _Init_SPI(void){
 	Driver_SPI1.Initialize(NULL);
 	Driver_SPI1.PowerControl(ARM_POWER_FULL);
@@ -78,5 +79,28 @@ void _LEDS_trame_end(uint8_t *trame){
 	for( i = ((NB_LEDS+1)*4); i < ((NB_LEDS+1)*4+5); i++)// portion du bandeau led (deplacement de 4 en 4)
 	{ 
 		trame[i] = 0xFF;
+	}
+}
+void phares(uint8_t * trame, int debut, int fin){
+int i ; 
+						for (i=debut;i<fin ;i++)
+						{
+							LEDS_set_single_led_color(trame,i,140,42,42,255);
+						}
+
+}
+void gauche (uint8_t * trame, int debut, int fin)
+{
+	
+	
+	int i,m;
+	for (i=debut;i>fin ;i--){
+	LEDS_set_single_led_color(trame, i-1,255,0,0,255);
+	osDelay(10);
+	}
+	for (m = fin; m <= debut	; m++){
+	 LEDS_set_single_led_color(trame, m,0,0,0,255);
+		osDelay(10);
+	
 	}
 }
