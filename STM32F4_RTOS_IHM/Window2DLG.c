@@ -29,15 +29,16 @@
 *
 **********************************************************************
 */
-#define ID_WINDOW_0      (GUI_ID_USER + 0x00)
-#define ID_TEXT_0      (GUI_ID_USER + 0x01)
-#define ID_TEXT_1      (GUI_ID_USER + 0x02)
-#define ID_PROGBAR_0      (GUI_ID_USER + 0x03)
-#define ID_TEXT_2      (GUI_ID_USER + 0x04)
-#define ID_PROGBAR_1      (GUI_ID_USER + 0x05)
-#define ID_TEXT_3      (GUI_ID_USER + 0x06)
-#define ID_PROGBAR_2      (GUI_ID_USER + 0x07)
-#define ID_BUTTON_0      (GUI_ID_USER + 0x08)
+#define ID_WINDOW_0        (GUI_ID_USER + 0x00)
+#define ID_TEXT_0        (GUI_ID_USER + 0x01)
+#define ID_TEXT_1        (GUI_ID_USER + 0x02)
+#define ID_PROGBAR_0        (GUI_ID_USER + 0x03)
+#define ID_TEXT_2        (GUI_ID_USER + 0x04)
+#define ID_PROGBAR_1        (GUI_ID_USER + 0x05)
+#define ID_TEXT_3        (GUI_ID_USER + 0x06)
+#define ID_PROGBAR_2        (GUI_ID_USER + 0x07)
+#define ID_BUTTON_0        (GUI_ID_USER + 0x08)
+#define ID_SLIDER_0        (GUI_ID_USER + 0x09)
 
 
 // USER START (Optionally insert additional defines)
@@ -69,6 +70,7 @@ static const GUI_WIDGET_CREATE_INFO _aDialogCreate[] = {
   { TEXT_CreateIndirect, "Text", ID_TEXT_3, 8, 97, 80, 20, 0, 0x64, 0 },
   { PROGBAR_CreateIndirect, "Progbar", ID_PROGBAR_2, 47, 95, 80, 20, 0, 0x0, 0 },
   { BUTTON_CreateIndirect, "Button", ID_BUTTON_0, 400, 10, 70, 25, 0, 0x0, 0 },
+  { SLIDER_CreateIndirect, "Slider", ID_SLIDER_0, 78, 157, 235, 50, 0, 0x0, 0 },
   // USER START (Optionally insert additional widgets)
   // USER END
 };
@@ -92,6 +94,10 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
   int     NCode;
   int     Id;
   // USER START (Optionally insert additional variables)
+	char tab[8];
+	sprintf(tab,"%d",var);
+	hItem = WM_GetDialogItem(pMsg->hWin, ID_TEXT_1);
+  TEXT_SetText(hItem, tab);
   // USER END
 
   switch (pMsg->MsgId) {
@@ -139,7 +145,25 @@ static void _cbDialog(WM_MESSAGE * pMsg) {
         break;
       case WM_NOTIFICATION_RELEASED:
         // USER START (Optionally insert code for reacting on notification message)
-			windowInstance=!windowInstance;
+			windowInstance=1;
+        // USER END
+        break;
+      // USER START (Optionally insert additional code for further notification handling)
+      // USER END
+      }
+      break;
+    case ID_SLIDER_0: // Notifications sent by 'Slider'
+      switch(NCode) {
+      case WM_NOTIFICATION_CLICKED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_RELEASED:
+        // USER START (Optionally insert code for reacting on notification message)
+        // USER END
+        break;
+      case WM_NOTIFICATION_VALUE_CHANGED:
+        // USER START (Optionally insert code for reacting on notification message)
         // USER END
         break;
       // USER START (Optionally insert additional code for further notification handling)

@@ -13,6 +13,8 @@
 #include "DIALOG.h"
 #include "Board_LED.h"                  // ::Board Support:LED
 #include "Board_Buttons.h"              // ::Board Support:Buttons
+#include "Driver_CAN.h"                 // ::CMSIS Driver:CAN
+
 
 #ifdef RTE_CMSIS_RTOS_RTX
 extern uint32_t os_time;
@@ -41,17 +43,24 @@ char windowInstance=0;
 osMailQId ID_BAL1;
 osMailQDef(BAL1,32,char);
 
+extern ARM_DRIVER_CAN Driver_CAN1;//into the library !!
+void myCAN1_callback(uint32_t obj_idx, uint32_t event);
+void InitCan1 (void);
+
 void GUIThread (void const *argument);
 void switchWindow (void const *argument);
 void myTime (void const *argument);
+void CANthread(void const *argument);
 
 osThreadId tid_GUIThread;
 osThreadId switchWindow_ID;
 osThreadId myTime_ID;
+osThreadId CANthread_ID;
 
-osThreadDef (GUIThread, osPriorityIdle, 1, 2048);
+osThreadDef(GUIThread, osPriorityNormal, 1, 2048);
 osThreadDef(switchWindow,osPriorityNormal, 1,0);
 osThreadDef(myTime,osPriorityNormal, 1,0);
+osThreadDef(CANthread,osPriorityNormal, 1,0);
 
 int Init_GUIThread (void) {
 
@@ -150,6 +159,75 @@ static void CPU_CACHE_Enable (void) {
   SCB_EnableDCache();
 }
 
+/*********************************************************************
+*
+*       Main
+*/
+int main (void) {
+	
+	osKernelInitialize ();                    // initialize CMSIS-RTOS
+  // initialize peripherals here
+	Init_GUIThread();// verifier ordre de initialisation (horloge)
+	//LED_Initialize();
+	Buttons_Initialize();
+	InitCan1();
+	
+	ID_BAL1 = osMailCreate(osMailQ(BAL1), NULL);
+	
+  // create 'thread' functions that start executing,
+	switchWindow_ID = osThreadCreate (osThread(switchWindow), NULL);
+	//myTime_ID = osThreadCreate (osThread(myTime), NULL);
+	CANthread_ID = osThreadCreate (osThread(CANthread), NULL);
+	
+	
+	
+	
+	
+  osKernelStart ();                         // start thread execution 
+	
+  osDelay(osWaitForever);
+}
+
+/*************************** End of file ****************************/
+//--------------------------------------------------------------------------------------------------CAN INIT
+void InitCan1 (void) {
+
+	Driver_CAN1.Initialize(NULL, myCAN1_callback);
+	Driver_CAN1.PowerControl(ARM_POWER_FULL);
+	
+	Driver_CAN1.SetMode(ARM_CAN_MODE_INITIALIZATION);
+	Driver_CAN1.SetBitrate( ARM_CAN_BITRATE_NOMINAL,
+													125000,
+													ARM_CAN_BIT_PROP_SEG(5U)   |         // Set propagation segment to 5 time quanta
+                          ARM_CAN_BIT_PHASE_SEG1(1U) |         // Set phase segment 1 to 1 time quantum (sample point at 87.5% of bit time)
+                          ARM_CAN_BIT_PHASE_SEG2(1U) |         // Set phase segment 2 to 1 time quantum (total bit is 8 time quanta long)
+                          ARM_CAN_BIT_SJW(1U));                // Resynchronization jump width is same as phase segment 2
+                          
+	// Mettre ici les filtres ID de réception sur objet 0
+	//Driver_CAN2.ObjectSetFilter( 0, ARM_CAN_FILTER_ID_EXACT_ADD , ARM_CAN_STANDARD_ID(0x161), 0) ;
+
+	Driver_CAN1.ObjectSetFilter( 0, ARM_CAN_FILTER_ID_EXACT_ADD , ARM_CAN_STANDARD_ID(0x0b6), 0) ;//KEIL LPC ID
+
+	//....................................................
+		
+	Driver_CAN1.ObjectConfigure(0,ARM_CAN_OBJ_RX);				// Objet 0 du CAN1 pour réception, 2 pour la transmission
+	
+	Driver_CAN1.SetMode(ARM_CAN_MODE_NORMAL);					// fin init
+}
+//--------------------------------------------------------------------------------------------------CAN CALLBACK
+void myCAN1_callback(uint32_t obj_idx, uint32_t event)
+{	
+
+    switch (event)
+    {
+    case ARM_CAN_EVENT_RECEIVE:
+        /*  Message was received successfully by the obj_idx object. */
+       osSignalSet(CANthread_ID, (1<<10));
+
+        break;
+    }
+}
+//--------------------------------------------------------------------------------------------------SWITCH WINDOW
 void switchWindow(void const *argument)
 {
 	WM_HWIN hDlg;
@@ -172,17 +250,34 @@ void switchWindow(void const *argument)
 			}
 	}
 }
-
+//--------------------------------------------------------------------------------------------------RANDOM
 void myTime(void const *argument)
 {
 	while(1)
 	{
 	}
 }
-
+//--------------------------------------------------------------------------------------------------CAN TREAT
+void CANthread(void const *argument)
+{
+	
+	ARM_CAN_MSG_INFO   rx_msg_info;
+	uint8_t data_buf[8];
+	
+	while(1)
+	{
+		osSignalWait((1<<10),osWaitForever);
+		Driver_CAN1.MessageRead(0, &rx_msg_info, data_buf, 1);
+		var = data_buf[0];
+		//osDelay(100);
+	}
+}
+//--------------------------------------------------------------------------------------------------GUI THREAD
 void GUIThread (void const *argument) {
 	char out, *ptr;
-	char user=0, userOld=0, state=0;
+	char user=1, userOld=0, state=0;
+	WM_HWIN hDlg;
+	
 	
 	MPU_Config ();
 	CPU_CACHE_Enable();                       /* Enable the CPU Cache           */
@@ -194,18 +289,16 @@ void GUIThread (void const *argument) {
 	Touch_Initialize();
 
 	/* Add GUI setup code here */
+	hDlg = CreateWindow2();
 
   while (1) {
 
-    var++;//testing variable
-		if(var>99)var=0;
-		
     /* All GUI related activities might only be called from here */
 		user = Buttons_GetState();
 		if(user && !userOld)
 		{
 			state=!state;
-			ptr = osMailAlloc(ID_BAL1,10);
+			ptr = osMailAlloc(ID_BAL1,100);
 			out=state;
 			*ptr = out;
 			osMailPut(ID_BAL1, ptr);
@@ -215,7 +308,7 @@ void GUIThread (void const *argument) {
 		{
 			windowInstance=0;
 			state=!state;
-			ptr = osMailAlloc(ID_BAL1,10);
+			ptr = osMailAlloc(ID_BAL1,100);
 			out=state;
 			*ptr = out;
 			osMailPut(ID_BAL1, ptr);
@@ -226,27 +319,3 @@ void GUIThread (void const *argument) {
 		GUI_X_ExecIdle();             /* Nothing left to do for the moment ... Idle processing */
   }
 }
-
-/*********************************************************************
-*
-*       Main
-*/
-int main (void) {
-	osKernelInitialize ();                    // initialize CMSIS-RTOS
-
-  // initialize peripherals here
-	LED_Initialize();
-	Buttons_Initialize();
-	
-  // create 'thread' functions that start executing,
-  ID_BAL1 = osMailCreate(osMailQ(BAL1), NULL);
-	switchWindow_ID = osThreadCreate (osThread(switchWindow), NULL);
-	//myTime_ID = osThreadCreate (osThread(myTime), NULL);
-	
-	Init_GUIThread();
-  osKernelStart ();                         // start thread execution 
-	
-  osDelay(osWaitForever);
-}
-
-/*************************** End of file ****************************/
