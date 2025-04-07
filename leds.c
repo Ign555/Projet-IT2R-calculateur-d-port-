@@ -54,13 +54,13 @@ void chenillard (uint8_t *trame, int num_leds)
 	
 	
 	int i,m;
-	for(i = 0; i < num_leds; i++){
+	for(i = num_leds; i >= 0; i--){
 	LEDS_set_single_led_color(trame, i+1,255,0,0,255);
 	osDelay(10);
 	}
 	for (m = num_leds; m > 0 ; m--){
 	 LEDS_set_single_led_color(trame, m,0,0,0,255);
-		osDelay(10);
+		//osDelay(10);
 	
 	}
 }
@@ -85,7 +85,7 @@ void phares(uint8_t * trame, int debut, int fin){
 int i ; 
 						for (i=debut;i<fin ;i++)
 						{
-							LEDS_set_single_led_color(trame,i,140,255,0,240);
+							LEDS_set_single_led_color(trame,i,255,255,255,255);
 						}
 
 }
@@ -94,13 +94,14 @@ void gauche (uint8_t * trame, int debut, int fin)
 	
 	
 	int i,m;
-	for (i=debut;i>fin ;i--){
+	for (i=fin;i<debut ;i++){
 	LEDS_set_single_led_color(trame, i-1,255,0,0,240);
 	osDelay(10);
 	}
 	for (m = fin; m <= debut	; m++){
 	 LEDS_set_single_led_color(trame, m,0,0,0,240);
-		osDelay(10);
+		//osDelay(10);
 	
 	}
 }
+

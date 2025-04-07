@@ -122,11 +122,25 @@ LEDS_init(trame);
 		while(1)
 					{	
 						//osSemaphoreRelease(Id_Sema);
-						chenillard (trame,5);	
 						phares(trame,6,15);
+						
+						chenillard (trame,5);	
+						chenillard (trame,5);
+						chenillard (trame,5);
+						chenillard (trame,5);
+						chenillard (trame,5);	
+						
+						phares(trame,6,15);
+						
 						gauche(trame,20,15); 
-					
-						osDelay(100);
+						gauche(trame,20,15); 
+						gauche(trame,20,15); 
+						gauche(trame,20,15); 
+						gauche(trame,20,15); 
+						
+						
+						
+//						osDelay(10);
 					}	
 }
 
