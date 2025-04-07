@@ -140,7 +140,7 @@ LEDS_init(trame);
 						
 						
 						
-//						osDelay(100);
+//						osDelay(10);
 					}	
 }
 
