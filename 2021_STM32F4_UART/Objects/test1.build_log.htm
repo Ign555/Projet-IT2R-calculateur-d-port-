@@ -21,33 +21,23 @@ Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V2.0.18.0
 Dialog DLL:      TCM.DLL V1.14.6.0
  
 <h2>Project:</h2>
-C:\Users\TEMP.GEII2.008\Documents\GitHub\Projet-IT2R-calculateur-d-port-\2021_STM32F4_UART\test1.uvprojx
-Project File Date:  03/21/2025
+C:\Users\TEMP.GEII2.009\Desktop\2021_STM32F4_UART\test1.uvprojx
+Project File Date:  01/31/2021
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 1 (build 61)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'Target 1'
-compiling gps.c...
-gps.h(10): warning:  #1295-D: Deprecated declaration gps_init - give arg types
-  void gps_init();
-gps.h(14): warning:  #1-D: last line of file ends without a newline
-  #endif
-gps.c(50): warning:  #1-D: last line of file ends without a newline
-  }
-gps.c: 3 warnings, 0 errors
 compiling main.c...
-gps.h(10): warning:  #1295-D: Deprecated declaration gps_init - give arg types
-  void gps_init();
-gps.h(14): warning:  #1-D: last line of file ends without a newline
-  #endif
-main.c(171): warning:  #177-D: variable "i" was declared but never referenced
-  	char i=0;
-main.c(172): warning:  #177-D: variable "trame" was declared but never referenced
-    char trame[70];
-main.c: 4 warnings, 0 errors
+main.c(193): warning:  #177-D: variable "valeur" was declared but never referenced
+  	char valeur = 0x41, i=0;
+main.c(194): warning:  #177-D: variable "chain" was declared but never referenced
+  	char chain[] = "fonctionne";
+main.c(197): warning:  #177-D: variable "j" was declared but never referenced
+    char j = 's';
+main.c: 3 warnings, 0 errors
 linking...
-Program Size: Code=18568 RO-data=768 RW-data=80 ZI-data=16000  
-".\Objects\test1.axf" - 0 Error(s), 7 Warning(s).
+Program Size: Code=27744 RO-data=1312 RW-data=100 ZI-data=17852  
+".\Objects\test1.axf" - 0 Error(s), 3 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -61,39 +51,33 @@ Package Vendor: ARM
    * Component: Keil RTX Version: 4.82.0
 
 Package Vendor: Keil
-                http://www.keil.com/pack/Keil.ARM_Compiler.1.3.3.pack
-                Keil.ARM Compiler::Compiler:I/O:STDOUT:ITM:1.2.1
-                Keil ARM Compiler extensions for ARM Compiler 5 and ARM Compiler 6
-   * Component: STDOUT Variant: ITM Version: 1.2.1
-
-Package Vendor: Keil
                 http://www.keil.com/pack/Keil.MDK-Middleware.7.0.0.pack
-                ::Board Support:Buttons:1.00 (API)
+                ::Board Support:LED:1.00 (API)
                 Keil MDK-ARM Professional Middleware for ARM Cortex-M based devices
-   * Component: Buttons Version: 1.00
    * Component: LED Version: 1.00
+   * Component: Buttons Version: 1.00
 
 Package Vendor: Keil
                 http://www.keil.com/pack/Keil.STM32F4xx_DFP.2.14.0.pack
-                Keil::Device:STM32Cube HAL:DMA:1.7.6
+                Keil::Device:Startup:2.6.3
                 STMicroelectronics STM32F4 Series Device Support, Drivers and Examples
-   * Component: DMA Version: 1.7.6
-   * Component: STM32Cube Framework Version: 1.0.0
    * Component: Startup Version: 2.6.3
    * Component: Cortex Version: 1.7.6
-   * Component: Classic Version: 1.7.6
    * Component: Common Version: 1.7.6
+   * Component: STM32Cube Framework Version: 1.0.0
+   * Component: Classic Version: 1.7.6
    * Component: GPIO Version: 1.7.6
-   * Component: PWR Version: 1.7.6
-   * Component: RCC Version: 1.7.6
-   * Component: USART Version: 2.12
+   * Component: DMA Version: 1.7.6
    * Component: USART Version: 1.7.6
-   * Component: Buttons Version: 2.0.0
+   * Component: RCC Version: 1.7.6
+   * Component: PWR Version: 1.7.6
+   * Component: USART Version: 2.12
    * Component: LED Version: 2.0.0
+   * Component: Buttons Version: 2.0.0
 
 <h2>Collection of Component include folders:</h2>
-  C:\Users\TEMP.GEII2.008\Documents\GitHub\Projet-IT2R-calculateur-d-port-\2021_STM32F4_UART\RTE
-  C:\Users\TEMP.GEII2.008\Documents\GitHub\Projet-IT2R-calculateur-d-port-\2021_STM32F4_UART\RTE\Device\STM32F407VGTx
+  C:\Users\TEMP.GEII2.009\Desktop\2021_STM32F4_UART\RTE
+  C:\Users\TEMP.GEII2.009\Desktop\2021_STM32F4_UART\RTE\Device\STM32F407VGTx
   C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.6.0\CMSIS\Core\Include
   C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.6.0\CMSIS\Driver\Include
   C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.6.0\CMSIS\RTOS\RTX\INC
@@ -111,83 +95,80 @@ Package Vendor: Keil
    * Component: ARM::CMSIS:CORE:5.3.0
 
    * Component: ARM::CMSIS:RTOS:Keil RTX:4.82.0
-      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\MsgQueue.c
-      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\Mutex.c
-      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\Semaphore.c
-      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\Thread.c
-      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\Timer.c
-      Source file:   CMSIS\RTOS\RTX\SRC\ARM\SVC_Table.s
-      Source file:   CMSIS\RTOS\RTX\Templates\RTX_Conf_CM.c
       Include file:  CMSIS\RTOS\RTX\UserCodeTemplates\osObjects.h
-      Include file:  CMSIS\RTOS\RTX\INC\cmsis_os.h
-      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\main.c
       Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\MailQueue.c
+      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\Semaphore.c
+      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\MsgQueue.c
+      Source file:   CMSIS\RTOS\RTX\Templates\RTX_Conf_CM.c
+      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\main.c
+      Source file:   CMSIS\RTOS\RTX\SRC\ARM\SVC_Table.s
+      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\Mutex.c
       Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\MemPool.c
+      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\Thread.c
+      Include file:  CMSIS\RTOS\RTX\INC\cmsis_os.h
       Library file:  CMSIS\RTOS\RTX\LIB\ARM\RTX_CM4.lib
-
-   * Component: Keil.ARM Compiler::Compiler:I/O:STDOUT:ITM:1.2.1
-      Source file:   Source\retarget_io.c
-
-   * Component: ::Board Support:Buttons:1.00 (API)
-      Include file:  Board\Board_Buttons.h
+      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\Timer.c
 
    * Component: ::Board Support:LED:1.00 (API)
       Include file:  Board\Board_LED.h
 
-   * Component: Keil::Device:STM32Cube HAL:DMA:1.7.6
-      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma.c
-      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma_ex.c
-
-   * Component: ::Device:STM32Cube Framework:1.0.0 (API)
+   * Component: ::Board Support:Buttons:1.00 (API)
+      Include file:  Board\Board_Buttons.h
 
    * Component: Keil::Device:Startup:2.6.3
-      Source file:   MDK\Device\Source\ARM\STM32F40xxx_41xxx_OPT.s
-      Include file:  Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
       Source file:   MDK\Device\Source\ARM\STM32F4xx_OTP.s
+      Include file:  Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h
+      Source file:   MDK\Device\Source\ARM\STM32F40xxx_41xxx_OPT.s
       Source file:   Drivers\CMSIS\Device\ST\STM32F4xx\Source\Templates\arm\startup_stm32f407xx.s
       Source file:   Drivers\CMSIS\Device\ST\STM32F4xx\Source\Templates\system_stm32f4xx.c
 
    * Component: Keil::Device:STM32Cube HAL:Cortex:1.7.6
       Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_cortex.c
 
+   * Component: Keil::Device:STM32Cube HAL:Common:1.7.6
+      Include file:  Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h
+      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal.c
+
+   * Component: ::Device:STM32Cube Framework:1.0.0 (API)
+
    * Component: Keil::Device:STM32Cube Framework:Classic:1.7.6
+      Source file:   MDK\Templates_LL\Src\main.c
+      Include file:  MDK\Templates\Inc\stm32f4xx_it.h
       Source file:   MDK\Templates\Src\stm32f4xx_it.c
-      Include file:  MDK\Templates\Inc\main.h
       Include file:  MDK\Templates\Inc\stm32f4xx_hal_conf.h
+      Include file:  MDK\Templates_LL\Inc\main.h
       Source file:   MDK\Templates\Src\main.c
       Include file:  CMSIS\Driver\Config\RTE_Device.h
-      Include file:  MDK\Templates_LL\Inc\main.h
       Source file:   MDK\Templates\Src\stm32f4xx_hal_msp.c
-      Include file:  MDK\Templates\Inc\stm32f4xx_it.h
-      Source file:   MDK\Templates_LL\Src\main.c
-
-   * Component: Keil::Device:STM32Cube HAL:Common:1.7.6
-      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal.c
-      Include file:  Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h
+      Include file:  MDK\Templates\Inc\main.h
 
    * Component: Keil::Device:STM32Cube HAL:GPIO:1.7.6
       Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_gpio.c
 
-   * Component: Keil::Device:STM32Cube HAL:PWR:1.7.6
-      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pwr_ex.c
-      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pwr.c
-
-   * Component: Keil::Device:STM32Cube HAL:RCC:1.7.6
-      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rcc_ex.c
-      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rcc.c
-
-   * Component: Keil::CMSIS Driver:USART:2.12
-      Source file:   CMSIS\Driver\USART_STM32F4xx.c
+   * Component: Keil::Device:STM32Cube HAL:DMA:1.7.6
+      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma.c
+      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_dma_ex.c
 
    * Component: Keil::Device:STM32Cube HAL:USART:1.7.6
       Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_usart.c
 
-   * Component: Keil.STM32F4-Discovery::Board Support:Buttons:2.0.0
-      Source file:   MDK\Boards\ST\STM32F4-Discovery\Common\Buttons_F4Discovery.c
+   * Component: Keil::Device:STM32Cube HAL:RCC:1.7.6
+      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rcc.c
+      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_rcc_ex.c
+
+   * Component: Keil::Device:STM32Cube HAL:PWR:1.7.6
+      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pwr.c
+      Source file:   Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_pwr_ex.c
+
+   * Component: Keil::CMSIS Driver:USART:2.12
+      Source file:   CMSIS\Driver\USART_STM32F4xx.c
 
    * Component: Keil.STM32F4-Discovery::Board Support:LED:2.0.0
       Source file:   MDK\Boards\ST\STM32F4-Discovery\Common\LED_F4Discovery.c
-Build Time Elapsed:  00:00:02
+
+   * Component: Keil.STM32F4-Discovery::Board Support:Buttons:2.0.0
+      Source file:   MDK\Boards\ST\STM32F4-Discovery\Common\Buttons_F4Discovery.c
+Build Time Elapsed:  00:00:03
 </pre>
 </body>
 </html>

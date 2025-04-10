@@ -40,17 +40,29 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"                   // ARM::CMSIS:RTOS:Keil RTX
-#include "gps.h"
 
 #include "Driver_USART.h"               // ::CMSIS Driver:USART
 #include "Board_LED.h"                  // ::Board Support:LED
-#include <stdio.h>											//use of sscanf
-#include <string.h>											//use of strcmp
+#include <string.h>
+#include <stdio.h>
 
-void Thread_T (void const *argument);                             // thread function
-osThreadId tid_Thread_T;                                          // thread id
-osThreadDef (Thread_T, osPriorityNormal, 1, 0);                   // thread object
+void Thread_T_gps (void const *argument);                             // thread function
+void Thread_R_gps (void const *argument);                             // thread function
 
+
+osThreadId tid_Thread_T_gps;                                          // thread id
+osThreadId tid_Thread_R_gps;                                          // thread id
+
+osMutexId ID_mut_tx;
+osMutexDef (mut_tx);
+
+osMailQId ID_BAL;
+osMailQDef(NomBAL, 43, char);
+
+osThreadDef (Thread_T_gps, osPriorityNormal, 1, 0);                   // thread object
+osThreadDef (Thread_R_gps, osPriorityNormal, 1, 0);                   // thread object
+
+extern ARM_DRIVER_USART Driver_USART2;
 extern ARM_DRIVER_USART Driver_USART3;
 
 
@@ -103,7 +115,21 @@ static void SystemClock_Config(void);
 static void Error_Handler(void);
 
 //fonction de CB lancee si Event T ou R
+void event_UART2(uint32_t event)
+{
+		if (event & ARM_USART_EVENT_SEND_COMPLETE){
+			osSignalSet(tid_Thread_T_gps, 0x01);
+		}
 
+}
+
+void event_UART3(uint32_t event)
+{
+		if (event & ARM_USART_EVENT_RECEIVE_COMPLETE){
+			osSignalSet(tid_Thread_R_gps, 0x04);
+		}																																			
+	
+}
 
 /* Private functions ---------------------------------------------------------*/
 /**
@@ -135,30 +161,26 @@ int main(void)
   /* Initialize CMSIS-RTOS2 */
   osKernelInitialize ();
 	
-	NVIC_SetPriority(USART3_IRQn,2);		// nécessaire ? (si LCD ?)
+
 	
-	Driver_USART3.Initialize(event_UART);
-	Driver_USART3.PowerControl(ARM_POWER_FULL);
-	Driver_USART3.Control(	ARM_USART_MODE_ASYNCHRONOUS |
-							ARM_USART_DATA_BITS_8		|
-							ARM_USART_STOP_BITS_1		|
-							ARM_USART_PARITY_EVEN		|
-							ARM_USART_FLOW_CONTROL_NONE,
-							9600);
-	Driver_USART3.Control(ARM_USART_CONTROL_TX,1);
+
 	
-	LED_Initialize ();
+
+	
+	//LED_Initialize ();
 
   /* Create thread functions that start executing, 
   Example: osThreadNew(app_main, NULL, NULL); */
-	tid_Thread_T = osThreadCreate (osThread(Thread_T), NULL);
-
+	tid_Thread_T_gps = osThreadCreate (osThread(Thread_T_gps), NULL);
+	tid_Thread_R_gps = osThreadCreate (osThread(Thread_R_gps), NULL);
+	ID_mut_tx = osMutexCreate(osMutex(mut_tx));
+	ID_BAL = osMailCreate(osMailQ(NomBAL), NULL);
+	
   /* Start thread execution */
   osKernelStart();
 	//LED_On (3);
+
 //#endif
-ITM_SendChar('Z');
-printf("test");
 	osDelay(osWaitForever);
 	
   /* Infinite loop */
@@ -167,19 +189,102 @@ printf("test");
   }
 }
 
-void Thread_T (void const *argument) {
-	char i=0;
-  char trame[70];
-	float latitude, longitude, seconde;
-	char heure, minute;
+void Thread_R_gps (void const *argument) {
+	char valeur = 0x41, i=0;
+	char chain[] = "fonctionne";
+	char trame[43];
+	char * ptr1, * result;
+  char j = 's';
   
+	Driver_USART3.Initialize(event_UART3);
+	Driver_USART3.PowerControl(ARM_POWER_FULL);
+	Driver_USART3.Control(	ARM_USART_MODE_ASYNCHRONOUS |
+							ARM_USART_DATA_BITS_8		|
+							ARM_USART_STOP_BITS_1		|
+							ARM_USART_PARITY_NONE		|
+							ARM_USART_FLOW_CONTROL_NONE,
+							9600);
+	Driver_USART3.Control(ARM_USART_CONTROL_RX,1);
   
   while (1) {
-    gps_getData(&latitude, &longitude, &heure, &minute, &seconde);
-		osSignalWait(0x01, osWaitForever);		// sommeil fin emission.
+		
+
+		Driver_USART3.Receive(trame,43);
+		
+		result = strstr(trame, "$GPGGA");
+		
+		if (result != NULL){
+			
+			ptr1 = osMailAlloc(ID_BAL, osWaitForever);
+			for (i = 0; i<(strlen(trame)); i++){
+				* (ptr1 + i) = trame[i];
+			}
+			osMailPut(ID_BAL, ptr1);
+			
+		}
 		
 		
+
+		osDelay(300);
+		osSignalWait(0x04, osWaitForever);// sommeil fin emission	
+
   }
+}
+
+
+
+
+void Thread_T_gps (void const *argument) {
+	char * ptr2;
+	char trame[43];
+	char i = 0;
+	char hmsstr[11], lat[10], lon[11];
+	float latitude, longitude, hms;
+	char EW, NS;
+	
+	osEvent EVretour;
+	
+	Driver_USART2.Initialize(event_UART2);
+	Driver_USART2.PowerControl(ARM_POWER_FULL);
+	Driver_USART2.Control(	ARM_USART_MODE_ASYNCHRONOUS |
+							ARM_USART_DATA_BITS_8		|
+							ARM_USART_STOP_BITS_1		|
+							ARM_USART_PARITY_NONE		|
+							ARM_USART_FLOW_CONTROL_NONE,
+							9600);
+	Driver_USART2.Control(ARM_USART_CONTROL_TX,1);
+	
+	while(1){
+		EVretour = osMailGet(ID_BAL, osWaitForever);
+		
+
+	 
+		ptr2 = EVretour.value.p;
+		for (i = 0; i<30; i++){
+			trame [i]  = * (ptr2+i);
+		}
+		osMailFree(ID_BAL, ptr2);
+		
+		sscanf(trame, "$GPGGA,%f,%f,%c,%f,%c", &hms, &latitude, &NS, &longitude, &EW);
+		sprintf(hmsstr,"%f", hms);
+		
+		Driver_USART2.Send(hmsstr, (strlen(hmsstr)));
+
+		if (latitude != NULL){
+			sprintf(lat,"%f", latitude);
+			sprintf(lon,"%f", longitude);
+			
+			Driver_USART2.Send(lat, (strlen(lat)));
+			Driver_USART2.Send(lon, (strlen(lon)));
+		}
+		
+		
+		osSignalWait(0x01, osWaitForever);		// sommeil fin emission
+
+		
+	}
+
+	
 }
 
 
