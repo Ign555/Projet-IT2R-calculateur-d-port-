@@ -28,30 +28,29 @@ void ADC_Init ( void );
 void Led_Task( void const * argument );
 void GPS_Task( void const * argument );
 //void US_Task( void const * argument );
-void CAN_Task_e( void const * argument );
+void CAN_Task_Send( void const * argument );
 void Lum_Task ( void const * argument );
 void Humidity_Task ( void const * argument );
 void sensor_Task (void const * argument);
-void CAN_Task_r (void const * argument);
+void CAN_Task_Recive (void const * argument);
 
-osThreadId ID_Led_Task, ID_GPS_Task,/*ID_US_Task,*/ID_CAN_Task_e, ID_Lum_Task, ID_Humidity_Task, ID_sensor_Task, ID_CAN_Task_r; 
+osThreadId ID_Led_Task, ID_GPS_Task,/*ID_US_Task,*/ID_CAN_Task_Send, ID_Lum_Task, ID_Humidity_Task, ID_sensor_Task, ID_CAN_Task_Recive; 
 
 osThreadDef ( Led_Task, osPriorityNormal, 1, 0);
 osThreadDef ( GPS_Task, osPriorityNormal, 1, 0);
 //osThreadDef ( US_Task, osPriorityNormal, 1, 0);
-osThreadDef ( CAN_Task_e, osPriorityHigh, 1, 0);
+osThreadDef ( CAN_Task_Send, osPriorityHigh, 1, 0);
 osThreadDef ( Lum_Task, osPriorityNormal, 1, 0);
 osThreadDef ( Humidity_Task, osPriorityNormal, 1, 0);
 osThreadDef ( sensor_Task, osPriorityNormal, 1, 0);
-osThreadDef ( CAN_Task_r, osPriorityHigh, 1,0);
+osThreadDef ( CAN_Task_Recive, osPriorityHigh, 1,0);
 
-osMailQId ID_LumDir, ID_ADC_CAN, ID_sensor, ID_CANr, ID_CANe;
+osMailQId ID_LumDir, ID_ADC_CAN, ID_sensor;
 
 osMailQDef ( LumDir, 2, char);
 osMailQDef ( ADC_CAN, 1, int);
 osMailQDef (sensor, 10, int);
-osMailQDef (CANr, 10 , int);
-osMailQDef (CANe, 10 , int);
+
 
 
 /* Callback fonction */
@@ -89,13 +88,13 @@ int main (void) {
 	
 	ID_Led_Task =osThreadCreate (osThread ( Led_Task), NULL);
 	ID_GPS_Task =osThreadCreate (osThread ( GPS_Task), NULL);
-  //ID_US_Task  =osThreadCreate (osThread (US_Task), NULL);	
-	ID_CAN_Task_e =osThreadCreate (osThread ( CAN_Task_e), NULL);
+  	//ID_US_Task  =osThreadCreate (osThread (US_Task), NULL);	
+	ID_CAN_Task_Send =osThreadCreate (osThread ( CAN_Task_Send), NULL);
 	ID_Lum_Task = osThreadCreate ( osThread ( Lum_Task), NULL);
 	ID_Humidity_Task = osThreadCreate ( osThread ( Humidity_Task), NULL);
-  ID_sensor_Task = osThreadCreate ( osThread ( sensor_Task), NULL);	
-  // example: tid_name = osThreadCreate (osThread(name), NULL);
-
+  	ID_sensor_Task = osThreadCreate ( osThread ( sensor_Task), NULL);	
+  	// example: tid_name = osThreadCreate (osThread(name), NULL);
+	ID_CAN_Task_Recive = osThreadCreat ( osThread ( CAN_Task_Recive), NULL);
   osKernelStart ();                         // start thread execution 
 }
 
@@ -409,12 +408,13 @@ void sensor_Task(void const*argument)
 	
 	
 
-void CAN_Task_e(void const*argument)
+void CAN_Task_Send(void const*argument)
 	{
 		char *ptr; 
 		ARM_CAN_MSG_INFO                tx_msg_info;
 		uint8_t tx_data_buf[8];
 		
+	
 		
 	tx_msg_info.id = ARM_CAN_STANDARD_ID(0x161);   /* pour carburant   */
 	tx_msg_info.rtr = 0;
@@ -460,7 +460,7 @@ void CAN_Task_e(void const*argument)
 					if (AD_last_l <= 2000){
 					
 						Envoie_l = osMailAlloc(ID_LumDir, osWaitForever);
-						* Envoie_l = 1; // à modifier 
+						* Envoie_l = 1; // Ã  modifier 
 						osMailPut(ID_LumDir, Envoie_l);
 						Etat = 1;
 						break;
@@ -480,7 +480,7 @@ void CAN_Task_e(void const*argument)
 					if (AD_last_l >= 2000){
 						
 						Envoie_l = osMailAlloc(ID_LumDir, osWaitForever);
-						* Envoie_l = 0; // à modifier 
+						* Envoie_l = 0; // Ã  modifier 
 						osMailPut(ID_LumDir, Envoie_l);		 
 						Etat = 0;
 						break;
@@ -504,7 +504,7 @@ void CAN_Task_e(void const*argument)
 
 			AD_last_h = Lib_ADC_Read_Channel1();
 			Envoie_h = osMailAlloc(ID_ADC_CAN, osWaitForever);
-			* Envoie_h = AD_last_h; // à modifier 
+			* Envoie_h = AD_last_h; // Ã  modifier 
 			osMailPut(ID_ADC_CAN, Envoie_h);		 
 			osDelay(1000);
 		}	
